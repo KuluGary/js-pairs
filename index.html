@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parejas</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            height: 300px;
+            width: 400px;
+        }
+        .ui {
+            color: white;
+            position: absolute;
+            left: 400px;
+            top: 100px;
+            font-family: 'VT323';
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cardsArray = [
+                {
+                    name: "ghost",
+                    img: "./icons/ghost.png"
+                },
+                {
+                    name: "ghost",
+                    img: "./icons/ghost.png"
+                },
+                {
+                    name: "jewel",
+                    img: "./icons/jewel.png"
+                },
+                {
+                    name: "jewel",
+                    img: "./icons/jewel.png"
+                },
+                {
+                    name: "present",
+                    img: "./icons/present.png"
+                },
+                {
+                    name: "present",
+                    img: "./icons/present.png"
+                },
+                {
+                    name: "puzzle",
+                    img: "./icons/puzzle.png"
+                },
+                {
+                    name: "puzzle",
+                    img: "./icons/puzzle.png"
+                },
+                {
+                    name: "rocket",
+                    img: "./icons/rocket.png"
+                },
+                {
+                    name: "rocket",
+                    img: "./icons/rocket.png"
+                },
+                {
+                    name: "star",
+                    img: "./icons/star.png"
+                },
+                {
+                    name: "star",
+                    img: "./icons/star.png"
+                }
+            ]
+
+            cardsArray.sort(() => 0.5 - Math.random())
+
+            const grid = document.querySelector('.grid');
+            const result = document.querySelector('#result');
+            const message = document.querySelector('#message');
+            let cardsChosen = [];
+            let cardsChosenId = [];
+            let cardsWon = [];
+
+            function create_board() {
+                for (let i = 0; i < cardsArray.length; i++) {
+                    let card = document.createElement('img');
+                    card.setAttribute('src', './icons/blank.png');
+                    card.setAttribute('data-id', i);
+                    card.style.margin = "5px";
+                    card.addEventListener('click', flip_card)
+                    grid.appendChild(card);
+                }
+            }
+
+            function check_match() {
+                let cards = document.querySelectorAll('img');
+                console.log(cards)
+                const optionOneId = cardsChosenId[0];
+                const optionTwoId = cardsChosenId[1];
+                if (cardsChosen[0] === cardsChosen[1]) {                    
+                    message.textContent = "You found a match!";
+                    cards[optionOneId].style.visibility = "hidden";
+                    cards[optionTwoId].style.visibility = "hidden";
+                    cardsWon.push(cardsChosen);
+                } else {
+                    cards[optionOneId].setAttribute('src', './icons/blank.png');
+                    cards[optionTwoId].setAttribute('src', './icons/blank.png');
+                    // alert('Sorry, try again')
+                    message.textContent = "Sorry, try again";
+                }
+                cardsChosen = [];
+                cardsChosenId = [];
+                result.textContent = cardsWon.length;
+                if (cardsWon.length === cardsArray.length/2) {
+                    message.textContent = 'Congratulations!'
+                }
+            }
+
+            function flip_card() {
+                let card_id = this.getAttribute('data-id');
+                cardsChosen.push(cardsArray[card_id].name)
+                cardsChosenId.push(card_id)
+                this.setAttribute('src', cardsArray[card_id].img);
+                if (cardsChosen.length === 2) {
+                    setTimeout(check_match, 500)
+                }
+
+            }
+            create_board();
+        })
+
+    </script>
+</head>
+
+<body style="background-color: black;">
+    <div class="ui">SCORE: <span id="result">0</span><div id="message"></div></div>
+
+    <div class="grid"></div>
+</body>
+
+</html>
